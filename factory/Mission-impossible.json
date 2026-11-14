@@ -1,0 +1,15 @@
+{
+	"name": "Mission-impossible",
+	"properties": {
+		"trustModeClaimForMi": {
+			"value": "Disabled",
+			"editable": true
+		}
+	},
+	"location": "centralindia",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "8508974b-1d79-4176-bd3f-0380ac408b2a",
+		"tenantId": "33e3b308-1ae6-464c-b593-5c084367ce48"
+	}
+}
