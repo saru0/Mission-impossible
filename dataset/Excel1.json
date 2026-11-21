@@ -8,7 +8,7 @@
 		"annotations": [],
 		"type": "Excel",
 		"typeProperties": {
-			"sheetName": "Sheet2",
+			"sheetName": "Sheet1",
 			"location": {
 				"type": "AzureBlobFSLocation",
 				"fileName": "companies_task_ss.xlsx",
