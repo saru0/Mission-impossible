@@ -60,7 +60,7 @@
 						"type": "ForEach",
 						"dependsOn": [
 							{
-								"activity": "get_emailIDs",
+								"activity": "Filtering_nulls",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -69,7 +69,7 @@
 						"userProperties": [],
 						"typeProperties": {
 							"items": {
-								"value": "@activity('get_emailIDs').output.value\r\n",
+								"value": "@activity('get_emailIDs').output.value\n",
 								"type": "Expression"
 							},
 							"activities": [
@@ -90,12 +90,35 @@
 										"headers": {},
 										"url": "https://prod-03.centralindia.logic.azure.com:443/workflows/f0277993b53248fca68279d19dd44230/triggers/When_an_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_an_HTTP_request_is_received%2Frun&sv=1.0&sig=82TDF0OvdKtusRr0OAPxCq5-u9s2ykNChYl3HxLJiAo",
 										"body": {
-											"value": "{\n    \"hr_name\": \"@{item().Name}\",\n    \"email\": \"@{item().Email}\",\n    \"subject\": \"Data Engineer Opportunity\",\n    \"message\": \"Hi, I am looking for Data Engineer opportunities. I have experience working with Azure Data Factory, Azure Databricks and SQL. Please consider my profile for suitable opportunities.\"\n}",
+											"value": "{\n  \"hr_name\": \"@{item().Name}\",\n  \"email\": \"@{item().Email}\",\n  \"subject\": \"Exploring Data Engineer Opportunities\",\n  \"message\": \"Hi,\n\nI hope you're doing well.\n\nI'm reaching out to explore Data Engineering opportunities at your organization.\n\nI have hands-on experience with Python, SQL, PySpark, Azure Data Factory, and Azure Databricks, working on ETL/ELT pipelines, data ingestion, batch and incremental processing, and data transformations.\n\nMy project experience also includes Delta Lake, lakehouse architecture, data modelling, data quality checks, pipeline monitoring, error handling, metadata-driven orchestration, and Git-based version control.\n\nI recently developed a cloud-integrated ETL project demonstrating these practical data engineering workflows:\n\nGitHub: https://github.com/saru0/Mission-impossible\n\nI'd appreciate your consideration for any suitable Data Engineer openings where I can contribute and grow.\n\nThank you for your time.\n\nBest regards,\nSaranya\nPhone: +91-7396528898 \"\n}",
 											"type": "Expression"
 										}
 									}
 								}
 							]
+						}
+					},
+					{
+						"name": "Filtering_nulls",
+						"type": "Filter",
+						"dependsOn": [
+							{
+								"activity": "get_emailIDs",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('get_emailIDs').output.value",
+								"type": "Expression"
+							},
+							"condition": {
+								"value": "@and(\n    not(empty(item().Email)),\n    not(equals(trim(item().Email), ''))\n)",
+								"type": "Expression"
+							}
 						}
 					}
 				],
@@ -120,7 +143,7 @@
 				"annotations": [],
 				"type": "Excel",
 				"typeProperties": {
-					"sheetName": "Sheet2",
+					"sheetName": "Sheet1",
 					"location": {
 						"type": "AzureBlobFSLocation",
 						"fileName": "companies_task_ss.xlsx",
