@@ -1,0 +1,78 @@
+{
+	"name": "Lets_send _mails",
+	"properties": {
+		"activities": [
+			{
+				"name": "get_emailIDs",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "ExcelSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						}
+					},
+					"dataset": {
+						"referenceName": "Excel1",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "ForEach1",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "get_emailIDs",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('get_emailIDs').output.value\r\n",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Web_send_mails",
+							"type": "WebActivity",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"method": "POST",
+								"url": "https://prod-03.centralindia.logic.azure.com:443/workflows/f0277993b53248fca68279d19dd44230/triggers/When_an_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_an_HTTP_request_is_received%2Frun&sv=1.0&sig=82TDF0OvdKtusRr0OAPxCq5-u9s2ykNChYl3HxLJiAo",
+								"body": {
+									"value": "{\n    \"hr_name\": \"@{item().Name}\",\n    \"email\": \"@{item().Email}\",\n    \"subject\": \"Data Engineer Opportunity\",\n    \"message\": \"Hi, I am looking for Data Engineer opportunities. I have experience working with Azure Data Factory, Azure Databricks and SQL. Please consider my profile for suitable opportunities.\"\n}",
+									"type": "Expression"
+								}
+							}
+						}
+					]
+				}
+			}
+		],
+		"annotations": []
+	}
+}
